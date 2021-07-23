@@ -1,0 +1,37 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "es2015",
+    "lib": [
+      "es2018",
+      "dom"
+    ],
+    "paths": {
+      "@tesla-ce/web-plugin": [
+        "dist/tesla-ce/web-plugin/tesla-ce-web-plugin",
+        "dist/tesla-ce/web-plugin"
+      ],
+      "@tesla-ce/icons": [
+        "dist/tesla-ce/icons/tesla-ce-icons",
+        "dist/tesla-ce/icons"
+      ],
+      "@tesla-ce/sensors": [
+        "dist/tesla-ce/sensors/tesla-ce-sensors",
+        "dist/tesla-ce/sensors"
+      ]
+    }
+  },
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true
+  }
+}

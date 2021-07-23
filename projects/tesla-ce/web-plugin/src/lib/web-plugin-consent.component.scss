@@ -1,0 +1,34 @@
+.tesla-primary-color {
+  fill: #5290e9;
+}
+
+.tesla-secondary-color {
+  fill: #97bcf2;
+}
+
+.tesla-tertiary-color {
+  fill: #ffffff;
+}
+
+.tesla-status-success {
+  fill: #25a148;
+}
+
+.tesla-status-warning {
+  fill: #ff832b;
+}
+
+.tesla-status-error {
+  fill: #da1f28;
+}
+
+.tesla-status {
+  display: none;
+}
+
+.tesla-status-show-success .tesla_status_success,
+.tesla-status-show-error .tesla_status_error,
+.tesla-status-show-warning .tesla_status_warning,
+.tesla-status-show-info .tesla_status_info{
+  display: block !important;
+}

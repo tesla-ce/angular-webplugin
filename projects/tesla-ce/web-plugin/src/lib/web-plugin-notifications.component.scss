@@ -1,0 +1,22 @@
+:host {
+  .tesla-notification {
+    width: 36px;
+    height: 36px;
+  }
+
+  .tesla-notification-info {
+    fill: blue;
+  }
+
+  .tesla-notification-warning {
+    fill: orange;
+  }
+
+  .tesla-notification-error {
+    fill: red;
+  }
+
+  .tesla-notification-alert {
+    fill: red;
+  }
+}

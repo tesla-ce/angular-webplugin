@@ -1,0 +1,16 @@
+<h1 mat-dialog-title>{{ 'NOTIFICATION.HEADER' | translate }}</h1>
+<div mat-dialog-content class="mat-typography">
+  <mat-list>
+    <mat-list-item *ngFor="let notification of (notifications | async)">
+      <svg-icon matListAvatar src="{{ getNotificationIcon(notification, 'svg') }}" [applyClass]="true" class="tesla-notification tesla-notification-{{ notification.type.toLowerCase() }}"></svg-icon>
+      <h3 matLine>{{notification.notificationId | translate}}</h3>
+      <p matLine>
+        <span> {{notification.when | amTimeAgo}} </span>
+      </p>
+    </mat-list-item>
+  </mat-list>
+</div>
+<div mat-dialog-actions>
+    <button mat-raised-button (click)="close()" >{{ 'ACTIONS.CLOSE' | translate }}</button>
+    <button mat-raised-button color="primary" (click)="clearNotifications()">{{ 'ACTIONS.CLEAR' | translate }}</button>
+</div>

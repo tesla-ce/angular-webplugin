@@ -1,0 +1,48 @@
+<div #menuOverlay class="tesla-menu-overlay" (click)="toggle()">
+</div>
+<div #floatingMenu class="tesla-toggle" (click)="toggle()" [style.left.px]="floatingX" [style.top.px]="floatingY">
+  <div [matBadgeHidden]="logoNotification!==true" [matBadge]="'&#8288;'" matBadgeColor="warn" matBadgeSize="small" class="smaller">
+    <canvas #menuToggle class="tesla-icon-menu" width="100%" height="100%"></canvas>
+  </div>
+</div>
+<div #mainMenu class="tesla-menu">
+
+  <a href="{{dashboardUrl}}" target="_blank">
+    <lib-tesla-icons icon="common-dashboard"></lib-tesla-icons>
+  </a>
+  <a href="javascript:void(0);" [matBadgeHidden]="(notifications | async)?.length==0" [matBadge]="(notifications | async)?.length" matBadgeColor="warn" matBadgeSize="small" class="smaller" (click)="showAlerts()">
+    <lib-tesla-icons icon="common-notifications"></lib-tesla-icons>
+  </a>
+
+  <a *ngIf="(sensors | async)?.camera > 0" href="javascript:void(0);" [ngClass]="{
+      'no-link-cursor': true,
+      'tesla-menu-status': true
+     }">
+    <lib-tesla-icons icon="sensor-camera" [status]="(sensors | async)?.camera"></lib-tesla-icons>
+  </a>
+  <a *ngIf="(sensors | async)?.keyboard > 0" href="javascript:void(0);" [ngClass]="{
+      'no-link-cursor': true,
+      'tesla-menu-status': true
+    }">
+    <lib-tesla-icons icon="sensor-keyboard" [status]="(sensors | async)?.keyboard"></lib-tesla-icons>
+  </a>
+  <a *ngIf="(sensors | async)?.microphone > 0" href="javascript:void(0);" [ngClass]="{
+      'no-link-cursor': true,
+      'tesla-menu-status': true
+    }">
+    <lib-tesla-icons icon="sensor-microphone" [status]="(sensors | async)?.microphone"></lib-tesla-icons>
+  </a>
+  <a *ngIf="(sensors | async)?.assessment > 0" href="javascript:void(0);" [ngClass]="{
+      'no-link-cursor': true,
+      'tesla-menu-status': true
+    }">
+    <lib-tesla-icons icon="sensor-assessment" [status]="(sensors | async)?.assessment"></lib-tesla-icons>
+  </a>
+  <a href="javascript:void(0);" [ngClass]="{
+      'no-link-cursor': true,
+      'tesla-network-stat': true,
+      'tesla-menu-status': true
+    }">
+    <lib-tesla-icons icon="common-connection" [status]="(network | async)?.status"></lib-tesla-icons>
+  </a>
+</div>

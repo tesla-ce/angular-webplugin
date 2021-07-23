@@ -1,0 +1,151 @@
+:host {
+  align-items: center;
+
+  .tesla-toggle {
+    cursor: move;
+    text-align: center;
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+    position: fixed;
+    top: 0px;
+    right: 15px;
+    z-index: 100002;
+  }
+
+  .tesla-toggle.tesla-no-logo {
+    background-color: #1a75b8;
+  }
+
+  .tesla-icon-menu {
+    font-size: 60px;
+    color: white;
+    display: block;
+    margin-top: 20px;
+    transition: 0.7s;
+  }
+
+  .tesla-menu-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.2;
+    z-index: 100000;
+    background-color: black;
+  }
+
+  .tesla-menu {
+    background-color: white;
+    height: 100px;
+    width: 100px;
+    transform: scale(0);
+    border-radius: 50%;
+    border-style: double;
+    border-color: #1a75b8;
+    position: fixed;
+    margin: auto;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    z-index: 100001;
+    transition: 0.7s;
+    box-sizing: initial;
+  }
+
+  .tesla-menu > a {
+    display: inline-block;
+    position: absolute;
+    font-size: 15px;
+    color: #bbbbbb;
+    outline: none;
+  }
+
+  .tesla-menu > a:nth-child(1) {
+    top: 5px;
+    left: 39px;
+  }
+
+  .tesla-menu > a:nth-child(2) {
+    top: 23px;
+    left: 73px;
+  }
+
+  .tesla-menu > a:nth-child(3) {
+    top: 58px;
+    left: 70px;
+  }
+
+  .tesla-menu > a:nth-child(4) {
+    top: 77px;
+    left: 39px;
+  }
+
+  .tesla-menu > a:nth-child(5) {
+    top: 58px;
+    left: 7px;
+  }
+
+  .tesla-menu > a:nth-child(6) {
+    top: 24px;
+    left: 9px;
+  }
+
+  .tesla-menu > a.tesla-network-stat {
+    top: 40px;
+    left: 39px;
+  }
+
+  .tesla-icon {
+    width: 20px;
+    height: 20px;
+    fill: #e0e0e0;
+  }
+
+  .tesla-icon.tesla-icon-wifi {
+    width: 30px;
+    height: 30px;
+  }
+
+  .mat-badge.smaller > span.mat-badge-content {
+    right: -2px;
+    top: 0;
+    width: 10px;
+    height: 10px;
+    line-height: 10px;
+    font-size: 5px;
+  }
+}
+
+.tesla-primary-color {
+  fill: #5290e9;
+}
+
+.tesla-secondary-color {
+  fill: #97bcf2;
+}
+
+.tesla-tertiary-color {
+  fill: #ffffff;
+}
+
+.tesla-status-success {
+  fill: #25a148;
+}
+
+.tesla-status-warning {
+  fill: #ff832b;
+}
+
+.tesla-status-error {
+  fill: #da1f28;
+}
+
+.no-link-cursor{
+  cursor: default;
+}
