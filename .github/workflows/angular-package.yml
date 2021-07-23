@@ -33,8 +33,12 @@ jobs:
           actual: ${{ steps.vars.outputs.version }}
           comparison: exact
   test:
+    strategy:
+      fail-fast: false
+      matrix:
+        operating-system: [ ubuntu-latest ] #, windows-latest, macos-latest ]
     needs: check
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.operating-system }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
@@ -58,9 +62,13 @@ jobs:
         with:
           fossa-api-key: ${{ secrets.FOSSA_API_KEY }}
   sonar:
+    strategy:
+      fail-fast: false
+      matrix:
+        operating-system: [ ubuntu-latest ] #, windows-latest, macos-latest ]
     needs: test
     name: Sonar
-    runs-on: ubuntu-latest
+    runs-on:
     continue-on-error: true
     steps:
       - uses: actions/checkout@v2
@@ -73,8 +81,12 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
   publish:
+    strategy:
+      fail-fast: false
+      matrix:
+        operating-system: [ ubuntu-latest ] #, windows-latest, macos-latest ]
     needs: sonar
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.operating-system }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
