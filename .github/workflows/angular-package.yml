@@ -89,10 +89,10 @@ jobs:
       - name: Build and publish
         if: github.event_name == 'release'
         run: |
+          npm install
           cd projects/tesla-ce/web-plugin
           npm install
           cd ../../../
-          npm install
           npm run buildwebpluginprod
           cd dist/tesla-ce/web-plugin/
           npm publish
