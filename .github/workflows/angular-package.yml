@@ -5,7 +5,7 @@ name: Angular package
 
 on:
   push:
-    branches: [ main, dev ]
+    branches: [ main ]
   pull_request:
     branches: [ main ]
   release:
@@ -38,7 +38,7 @@ jobs:
       matrix:
         operating-system: [ ubuntu-latest ] #, windows-latest, macos-latest ]
     needs: check
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.operating-system }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
@@ -79,6 +79,7 @@ jobs:
   publish:
     needs: sonar
     runs-on: ubuntu-latest
+    if: github.event_name == 'release'
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
