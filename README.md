@@ -1,11 +1,9 @@
+[![npm version](https://badge.fury.io/js/%40tesla-ce%2Fweb-plugin.svg)](https://badge.fury.io/js/%40tesla-ce%2Fweb-plugin)
 [![codecov](https://codecov.io/gh/tesla-ce/angular-webplugin/branch/main/graph/badge.svg?token=D7YgNLW7G4)](https://codecov.io/gh/tesla-ce/angular-webplugin)
 [![AGPL License](https://img.shields.io/badge/license-AGPL-blue.svg)](http://www.gnu.org/licenses/agpl-3.0)
 [![FOSSA Status](https://app.fossa.com/api/projects/custom%2B26246%2Fgithub.com%2Ftesla-ce%2Fangular-webplugin.svg?type=shield)](https://app.fossa.com/projects/custom%2B26246%2Fgithub.com%2Ftesla-ce%2Fangular-webplugin?ref=badge_shield)
 
 [![Quality gate](https://sonar.sunai.uoc.edu/api/project_badges/quality_gate?project=angular-webplugin)](https://sonar.sunai.uoc.edu/dashboard?id=angular-webplugin)
-
-[![NPM](https://nodei.co/npm/@tesla-ce/web-plugin.png)](https://npmjs.org/package/@tesla-ce/web-plugin)
-
 
 # TeSLA CE Angular plugin used for integration
 
