@@ -1,10 +1,6 @@
 {
   "name": "@tesla-ce/web-plugin",
   "version": "0.0.11",
-  "peerDependencies": {
-    "@tesla-ce/icons": "0.0.36",
-    "@tesla-ce/sensors": "0.0.2"
-  },
   "dependencies": {
     "@angular/common": "^9.1.10",
     "@angular/compiler": "9.1.13",
@@ -22,7 +18,9 @@
     "ngx-moment": "^3.5.0",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
-    "typescript": "^3.8.3"
+    "typescript": "^3.8.3",
+    "@tesla-ce/icons": "0.0.36",
+    "@tesla-ce/sensors": "0.0.2"
   },
   "publishConfig": {
     "access": "public"
