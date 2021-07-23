@@ -130,7 +130,7 @@ jobs:
         with:
           upload_url: ${{ steps.get_release.outputs.upload_url }}
           asset_path: ./dist/web-plugin/web-plugin-${{ steps.vars.outputs.version }}.zip
-          asset_name: web-plugin-${{ steps.vars.outputs.version }}
+          asset_name: web-plugin-${{ steps.vars.outputs.version }}.zip
           asset_content_type: application/zip
         env:
           GITHUB_TOKEN: ${{ github.token }}
