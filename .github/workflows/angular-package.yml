@@ -56,7 +56,7 @@ jobs:
         with:
           fail_ci_if_error: true
           env_vars: OS
-          files: ./coverage/tesla-ce/web-plugin/index.html
+          files: ./coverage/tesla-ce/web-plugin/lcov.info
       - name: Fossa update license analysis
         uses: fossa-contrib/fossa-action@v1
         with:
