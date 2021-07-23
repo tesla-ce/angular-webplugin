@@ -100,7 +100,6 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Build for tesla/core
         if: github.event_name == 'release'
-        uses: actions/upload-release-asset@v1.0.2
         run: |
           cd projects/tesla-ce/web-plugin
           npm install
@@ -110,11 +109,24 @@ jobs:
           cd dist/web-plugin
           rm assets/tesla.png && rm assets/test_data.json
           zip web-plugin-${{ steps.vars.outputs.version }}.zip web-plugin.js 3rdpartylicenses.txt styles.css -r assets
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: web-plugin-${{ steps.vars.outputs.version }}.zip
+          path: dist/web-plugin/web-plugin-${{ steps.vars.outputs.version }}.zip
+      - name: Get release
+        if: github.event_name == 'release'
+        id: get_release
+        uses: bruceadams/get-release@v1.2.2
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      - name: Upload release artifact
+        uses: actions/upload-release-asset@v1.0.2
+        if: github.event_name == 'release'
         with:
           upload_url: ${{ steps.get_release.outputs.upload_url }}
-          asset_path: ./dist/web-plugin-${{ steps.vars.outputs.version }}.zip
+          asset_path: ./dist/web-plugin/web-plugin-${{ steps.vars.outputs.version }}.zip
           asset_name: web-plugin-${{ steps.vars.outputs.version }}.zip
           asset_content_type: application/zip
         env:
           GITHUB_TOKEN: ${{ github.token }}
-      - name: Builf
