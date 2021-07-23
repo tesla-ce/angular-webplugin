@@ -99,7 +99,6 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Build for tesla/core
-        if: github.event_name == 'release'
         run: |
           cd projects/tesla-ce/web-plugin
           npm install
