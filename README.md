@@ -1,3 +1,12 @@
+[![codecov](https://codecov.io/gh/tesla-ce/angular-webplugin/branch/main/graph/badge.svg?token=D7YgNLW7G4)](https://codecov.io/gh/tesla-ce/angular-webplugin)
+[![AGPL License](https://img.shields.io/badge/license-AGPL-blue.svg)](http://www.gnu.org/licenses/agpl-3.0)
+[![FOSSA Status](https://app.fossa.com/api/projects/custom%2B26246%2Fgithub.com%2Ftesla-ce%2Fangular-webplugin.svg?type=shield)](https://app.fossa.com/projects/custom%2B26246%2Fgithub.com%2Ftesla-ce%2Fangular-webplugin?ref=badge_shield)
+
+[![Quality gate](https://sonar.sunai.uoc.edu/api/project_badges/quality_gate?project=angular-webplugin)](https://sonar.sunai.uoc.edu/dashboard?id=angular-webplugin)
+
+[![NPM](https://nodei.co/npm/@tesla-ce/web-plugin.png)](https://npmjs.org/package/@tesla-ce/web-plugin)
+
+
 # TeSLA CE Angular plugin used for integration
 
 | :warning: This repository is **under construction**. Final release of TeSLA Community Edition source code is expected by the **end of 2021** |
@@ -20,3 +29,5 @@ Credits: Include a section for credits in order to highlight and link to the aut
 
 ## License
 This project is licensed under [AGPL v3 licence](http://www.gnu.org/licenses/agpl-3.0).
+
+[![FOSSA Status](https://app.fossa.com/api/projects/custom%2B26246%2Fgithub.com%2Ftesla-ce%2Fangular-webplugin.svg?type=large)](https://app.fossa.com/projects/custom%2B26246%2Fgithub.com%2Ftesla-ce%2Fangular-webplugin?ref=badge_large)
