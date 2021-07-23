@@ -1,6 +1,6 @@
 # This workflow will perform a fast test
 
-name: Angular package
+name: Angular Fast Test
 
 on:
   push:
