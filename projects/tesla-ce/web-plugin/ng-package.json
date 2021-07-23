@@ -29,6 +29,7 @@
     "moment",
     "ngx-moment",
     "rxjs",
-    "@tesla-ce/icons"
+    "@tesla-ce/icons",
+    "typescript"
   ]
 }
