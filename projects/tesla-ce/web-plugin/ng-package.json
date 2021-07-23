@@ -4,6 +4,7 @@
   "lib": {
     "entryFile": "src/public-api.ts",
     "umdModuleIds": {
+      "@tesla-ce/sensors": "sensors",
       "@tesla-ce/icons": "icons",
       "@ngx-pwa/local-storage": "storage",
       "@ngx-translate/core": "core$1",
