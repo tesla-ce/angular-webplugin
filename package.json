@@ -36,7 +36,9 @@
     "ngx-moment": "^3.5.0",
     "rxjs": "~6.5.4",
     "tslib": "^1.14.1",
-    "zone.js": "~0.10.2"
+    "zone.js": "~0.10.2",
+    "@tesla-ce/icons": "0.0.36",
+    "@tesla-ce/sensors": "0.0.2"
   },
   "devDependencies": {
     "@angular-builders/custom-webpack": "^9.2.0",

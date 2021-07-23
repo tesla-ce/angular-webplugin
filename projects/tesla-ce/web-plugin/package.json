@@ -1,6 +1,10 @@
 {
   "name": "@tesla-ce/web-plugin",
   "version": "0.0.11",
+  "peerDependencies": {
+    "@tesla-ce/icons": "0.0.36",
+    "@tesla-ce/sensors": "0.0.2"
+  },
   "dependencies": {
     "@angular/common": "^9.1.10",
     "@angular/compiler": "9.1.13",
@@ -12,8 +16,6 @@
     "@ngx-pwa/local-storage": "^9.0.3",
     "@ngx-translate/core": "^12.1.2",
     "@ngx-translate/http-loader": "^4.0.0",
-    "@tesla-ce/icons": "0.0.36",
-    "@tesla-ce/sensors": "0.0.2",
     "angular-svg-icon": "^9.2.0",
     "document-register-element": "^1.7.2",
     "moment": "^2.26.0",
