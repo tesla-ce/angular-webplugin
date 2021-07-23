@@ -9,10 +9,6 @@ on:
       - '!main'
 jobs:
   test:
-    strategy:
-      fail-fast: false
-      matrix:
-        operating-system: [ ubuntu-latest ] #, windows-latest, macos-latest ]
     needs: check
     runs-on: ubuntu-latest
     steps:
@@ -22,18 +18,3 @@ jobs:
           node-version: '15'
       - run: npm install
       - run: npm run testgithub
-      # - run: npm run ng test --no-watch --code-coverage
-      - name: "Upload coverage to Codecov"
-        uses: codecov/codecov-action@v1.5.0
-        if: matrix.operating-system == 'ubuntu-latest'
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-          OS: ${{ matrix.operating-system }}
-        with:
-          fail_ci_if_error: true
-          env_vars: OS
-          files: ./coverage/tesla-ce/web-plugin/index.html
-      - name: Fossa update license analysis
-        uses: fossa-contrib/fossa-action@v1
-        with:
-          fossa-api-key: ${{ secrets.FOSSA_API_KEY }}
