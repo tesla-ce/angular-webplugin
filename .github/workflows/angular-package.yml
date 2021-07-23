@@ -52,7 +52,7 @@ jobs:
         with:
           fail_ci_if_error: true
           env_vars: OS
-          files: ./coverage/tesla-ce/icons/index.html
+          files: ./coverage/tesla-ce/web-plugin/index.html
       - name: Fossa update license analysis
         uses: fossa-contrib/fossa-action@v1
         with:
@@ -89,9 +89,32 @@ jobs:
       - name: Build and publish
         if: github.event_name == 'release'
         run: |
+          cd projects/tesla-ce/web-plugin
+          npm install
+          cd ../../../
           npm install
           npm run buildwebpluginprod
           cd dist/tesla-ce/web-plugin/
           npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Build for tesla/core
+        if: github.event_name == 'release'
+        uses: actions/upload-release-asset@v1.0.2
+        run: |
+          cd projects/tesla-ce/web-plugin
+          npm install
+          cd ../../../
+          npm install
+          npm run buildwebpluginteslacore
+          cd dist/web-plugin
+          rm assets/tesla.png && rm assets/test_data.json
+          zip web-plugin-${{ steps.vars.outputs.version }}.zip web-plugin.js 3rdpartylicenses.txt styles.css -r assets
+        with:
+          upload_url: ${{ steps.get_release.outputs.upload_url }}
+          asset_path: ./dist/web-plugin-${{ steps.vars.outputs.version }}.zip
+          asset_name: web-plugin-${{ steps.vars.outputs.version }}.zip
+          asset_content_type: application/zip
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      - name: Builf

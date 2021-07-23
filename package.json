@@ -9,6 +9,7 @@
     "test": "ng test",
     "testgithub": "ng test --watch=false --browsers=ChromeHeadless --code-coverage",
     "buildwebpluginprod": "ng build @tesla-ce/web-plugin --prod",
+    "buildwebpluginteslacore": "ng build web-plugin --prod --output-hashing=none && cat dist/web-plugin/runtime-es5.js dist/web-plugin/polyfills-es5.js dist/web-plugin/main-es5.js > dist/web-plugin/web-plugin.js",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
