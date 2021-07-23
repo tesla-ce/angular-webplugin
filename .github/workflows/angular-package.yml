@@ -46,7 +46,6 @@ jobs:
       - name: "Upload coverage to Codecov"
         uses: codecov/codecov-action@v1.5.0
         if: matrix.operating-system == 'ubuntu-latest'
-        continue-on-error: true
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
           OS: ${{ matrix.operating-system }}
@@ -56,13 +55,13 @@ jobs:
           files: ./coverage/tesla-ce/icons/index.html
       - name: Fossa update license analysis
         uses: fossa-contrib/fossa-action@v1
-        continue-on-error: true
         with:
           fossa-api-key: ${{ secrets.FOSSA_API_KEY }}
   sonar:
     needs: test
     name: Sonar
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v2
         with:
