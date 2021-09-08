@@ -160,6 +160,12 @@ export class WebPluginService {
     }
   }
 
+  public loadManualConfig(config: TeSLAConfiguration) {
+    Object.assign(this.currentConfig, configData);
+    this.ready = true;
+    console.log('TeSLA configuration ready');
+  }
+
   public isReady() {
     return this.ready;
   }
