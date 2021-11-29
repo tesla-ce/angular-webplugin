@@ -60,7 +60,7 @@ export class WebPluginConsentComponent extends IconLoader implements OnInit, OnD
 
   public accept(): void {
     this.dialogRef.close('accepted');
-    this.statusService.addNotification('INFO', 'NOTIFICATION.CONSENT.ACCEPTED');
+    // this.statusService.addNotification('INFO', 'NOTIFICATION.CONSENT.ACCEPTED');
   }
 
   public reject(): void {
