@@ -1,13 +1,12 @@
 import { Component, Inject, OnInit, AfterViewInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import {APP_BASE_HREF, DOCUMENT} from '@angular/common';
-import { fromEvent } from 'rxjs/internal/observable/fromEvent';
-import { Subscription } from 'rxjs/internal/Subscription';
+import {Observable, fromEvent, Subscription} from 'rxjs';
 import {IconLoader, WebPluginService} from './web-plugin.service';
 import { WebPluginStatusService, SensorsStatus, NetworkStatus, ConsentStatus, Notification } from './web-plugin-status.service';
-import { Observable} from 'rxjs';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { WebPluginNotificationsComponent } from './web-plugin-notifications.component';
 import { TranslateService } from '@ngx-translate/core';
+import {MatDialogRef} from "@angular/material/dialog/dialog-ref";
 
 /** @dynamic */
 @Component({
@@ -18,26 +17,26 @@ import { TranslateService } from '@ngx-translate/core';
   ]
 })
 export class WebPluginMenuComponent extends IconLoader implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild('menuOverlay') menuOverlay: ElementRef;
-  @ViewChild('floatingMenu') floatingMenu: ElementRef;
-  @ViewChild('menuToggle', {static: true}) menuToggle: ElementRef<HTMLCanvasElement>;
-  @ViewChild('mainMenu') mainMenu: ElementRef;
-  public numAlerts: number;
+  @ViewChild('menuOverlay') menuOverlay: ElementRef = {} as ElementRef;
+  @ViewChild('floatingMenu') floatingMenu: ElementRef = {} as ElementRef;
+  @ViewChild('menuToggle', {static: true}) menuToggle: ElementRef<HTMLCanvasElement> = {} as ElementRef<HTMLCanvasElement>;
+  @ViewChild('mainMenu') mainMenu: ElementRef = {} as ElementRef;
+  public numAlerts: number = 0;
   private expanded = false;
   private dragged = false;
-  private context: CanvasRenderingContext2D;
+  private context: CanvasRenderingContext2D = {} as CanvasRenderingContext2D;
   private pos1 = 0;
   private pos2 = 0;
   private pos3 = 0;
   private pos4 = 0;
-  private mouseDown: Subscription;
-  private mouseUp: Subscription;
-  private mouseMove: Subscription;
-  public network: Observable<NetworkStatus>;
-  public sensors: Observable<SensorsStatus>;
-  public consent: Observable<ConsentStatus>;
-  public notifications: Observable<Array<Notification>>;
-  private notificationsDialogRef = null;
+  private mouseDown: Subscription = {} as Subscription;
+  private mouseUp: Subscription = {} as Subscription;
+  private mouseMove: Subscription = {} as Subscription;
+  public network: Observable<NetworkStatus> = {} as Observable<NetworkStatus>;
+  public sensors: Observable<SensorsStatus> = {} as Observable<SensorsStatus>;
+  public consent: Observable<ConsentStatus> = {} as Observable<ConsentStatus>;
+  public notifications: Observable<Array<Notification>> = {} as Observable<Array<Notification>>;
+  private notificationsDialogRef:MatDialogRef<WebPluginNotificationsComponent> = {} as MatDialogRef<WebPluginNotificationsComponent>;
   public dashboardUrl = '#';
   public logoNotification = false;
   public floatingX = 0;
@@ -65,9 +64,10 @@ export class WebPluginMenuComponent extends IconLoader implements OnInit, AfterV
 
   public ngAfterViewInit(): void {
     const instance = this;
-    this.context = this.menuToggle.nativeElement.getContext('2d');
-    this.mouseDown = fromEvent(this.floatingMenu.nativeElement, 'mousedown').subscribe((event: MouseEvent) => {
-      instance.dragMouseDown(event);
+
+    this.context = this.menuToggle.nativeElement.getContext('2d')!;
+    this.mouseDown = fromEvent(this.floatingMenu.nativeElement, 'mousedown').subscribe(event => {
+      instance.dragMouseDown(event as MouseEvent);
     });
 
     this.drawImage();
@@ -150,12 +150,15 @@ export class WebPluginMenuComponent extends IconLoader implements OnInit, AfterV
   public dragMouseDown(event: MouseEvent) {
     this.pos3 = event.clientX;
     this.pos4 = event.clientY;
-    this.mouseMove = fromEvent(this.document, 'mousemove').subscribe((event2: MouseEvent) => {
+    this.mouseMove = fromEvent(this.document, 'mousemove').subscribe(event2 => {
+
       event2.preventDefault();
+      const ev2 = event2 as MouseEvent;
+
       const w = Math.round(this.floatingMenu.nativeElement.clientWidth / 2.0);
       const h = Math.round(this.floatingMenu.nativeElement.clientHeight / 2.0);
-      const x = Math.max(w, Math.min(document.documentElement.clientWidth - w, event2.clientX));
-      const y = Math.max(h, Math.min(document.documentElement.clientHeight - h, event2.clientY));
+      const x = Math.max(w, Math.min(document.documentElement.clientWidth - w, ev2.clientX));
+      const y = Math.max(h, Math.min(document.documentElement.clientHeight - h, ev2.clientY));
       this.pos1 = this.pos3 - x;
       this.pos2 = this.pos4 - y;
       this.pos3 = x;

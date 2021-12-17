@@ -58,7 +58,7 @@
     box-sizing: initial;
   }
 
-  .tesla-menu > a {
+  .tesla-menu a {
     display: inline-block;
     position: absolute;
     font-size: 15px;
@@ -66,37 +66,37 @@
     outline: none;
   }
 
-  .tesla-menu > a:nth-child(1) {
+  .tesla-menu a:nth-child(1) {
     top: 5px;
     left: 39px;
   }
 
-  .tesla-menu > a:nth-child(2) {
+  .tesla-menu a:nth-child(2) {
     top: 23px;
     left: 73px;
   }
 
-  .tesla-menu > a:nth-child(3) {
+  .tesla-menu a:nth-child(3) {
     top: 58px;
     left: 70px;
   }
 
-  .tesla-menu > a:nth-child(4) {
+  .tesla-menu a:nth-child(4) {
     top: 77px;
     left: 39px;
   }
 
-  .tesla-menu > a:nth-child(5) {
+  .tesla-menu a:nth-child(5) {
     top: 58px;
     left: 7px;
   }
 
-  .tesla-menu > a:nth-child(6) {
+  .tesla-menu a:nth-child(6) {
     top: 24px;
     left: 9px;
   }
 
-  .tesla-menu > a.tesla-network-stat {
+  .tesla-menu a.tesla-network-stat {
     top: 40px;
     left: 39px;
   }

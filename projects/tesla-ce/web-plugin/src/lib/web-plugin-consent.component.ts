@@ -18,11 +18,11 @@ export class WebPluginConsentComponent extends IconLoader implements OnInit, OnD
               private pluginService: WebPluginService, private statusService: WebPluginStatusService) {
     super(pluginService.getAssetsBaserUrl());
   }
-  public enabledInstruments = [];
+  public enabledInstruments: Array<number> = [];
   public allowRejectCapture = false;
-  public breakpoint = null;
+  public breakpoint:number = 0;
 
-  static getBreakPoint(innerWidth) {
+  static getBreakPoint(innerWidth: number) {
     if (innerWidth < 500) {
       return 1;
     }
@@ -45,13 +45,15 @@ export class WebPluginConsentComponent extends IconLoader implements OnInit, OnD
     this.pluginService.configChange.subscribe(value => {
       this.enabledInstruments = this.pluginService.getInstruments();
       if (this.pluginService.getActivity() !== null) {
+        // @ts-ignore: Object is possibly 'null'.
         this.allowRejectCapture = this.pluginService.getActivity().allow_reject_capture;
       }
     });
   }
 
-  onResize(event) {
-    this.breakpoint = WebPluginConsentComponent.getBreakPoint(event.target.innerWidth);
+  onResize(event: UIEvent) {
+    const w = event.target as Window;
+    this.breakpoint = WebPluginConsentComponent.getBreakPoint(w.innerWidth);
   }
 
   public ngOnDestroy(): void {

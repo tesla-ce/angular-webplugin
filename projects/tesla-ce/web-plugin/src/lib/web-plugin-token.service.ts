@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import {BehaviorSubject, Observable, Subscription, throwError} from 'rxjs';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { WebPluginService, TeSLAJWTToken } from './web-plugin.service';
 import { catchError, retry } from 'rxjs/operators';
@@ -18,16 +18,16 @@ export interface TokenPayload {
   providedIn: 'root'
 })
 export class WebPluginTokenService {
-  private token = new BehaviorSubject<TeSLAJWTToken>(null);
+  private token = new BehaviorSubject<TeSLAJWTToken>({} as TeSLAJWTToken);
   readonly tokenChange = this.token.asObservable();
-  private currentToken: TeSLAJWTToken;
-  private expiration: Date;
-  private maxExpiration: Date;
-  private refreshURL: string;
-  private refreshTimer = null;
+  private currentToken: TeSLAJWTToken = {} as TeSLAJWTToken;
+  private expiration: Date = {} as Date;
+  private maxExpiration: Date = {} as Date;
+  private refreshURL: string = '';
+  private refreshTimer: Subscription = {} as Subscription;
 
-  constructor(@Inject(WebPluginService) private config,
-              @Inject(WebPluginStatusService) private statusService,
+  constructor(@Inject(WebPluginService) private config: WebPluginService,
+              @Inject(WebPluginStatusService) private statusService: WebPluginStatusService,
               private http: HttpClient) {
     this.refreshURL = this.config.getApiURL() + '/api/v2/auth/token/refresh';
     this.setToken(config.getToken());
@@ -39,7 +39,7 @@ export class WebPluginTokenService {
   }
 
   public setToken(token: TeSLAJWTToken): void {
-    if (this.refreshTimer !== null) {
+    if (Object.keys(this.refreshTimer).length !== 0) {
       this.refreshTimer.unsubscribe();
     }
     this.currentToken = token;
@@ -66,8 +66,8 @@ export class WebPluginTokenService {
     return Object.assign({}, this.currentToken);
   }
 
-  private decodeToken(token: string): TokenPayload {
-    if (token === null || token.split('.').length !== 3) {
+  private decodeToken(token: string): TokenPayload | null {
+    if (token === undefined || token === null || token.split('.').length !== 3) {
       console.error('Invalid token');
       return null;
     }
@@ -100,19 +100,23 @@ export class WebPluginTokenService {
   public getExpiration(): Date {
     const payload = this.decodeToken(this.currentToken.access_token);
     let expiration = null;
+    let returnDate = new Date();
     if (payload !== null) {
       expiration = payload.exp * 1000;
+      returnDate = new Date(expiration);
     }
-    return new Date(expiration);
+    return returnDate;
   }
 
   public getMaxExpiration(): Date {
     const payload = this.decodeToken(this.currentToken.refresh_token);
     let expiration = null;
+    let returnDate = new Date();
     if (payload !== null) {
       expiration = payload.exp * 1000;
+      returnDate = new Date(expiration);
     }
-    return new Date(expiration);
+    return returnDate;
   }
 
   private refreshToken(): Observable<any> {

@@ -15,7 +15,7 @@ import {IconLoader, WebPluginService} from './web-plugin.service';
 })
 export class WebPluginNotificationsComponent extends IconLoader implements OnInit, OnDestroy {
 
-  public notifications: Observable<Array<Notification>>;
+  public notifications: Observable<Array<Notification>> = {} as Observable<Array<Notification>>;
 
   constructor(@Inject(WebPluginService) private config: WebPluginService,
               @Inject(WebPluginStatusService) private status: WebPluginStatusService,

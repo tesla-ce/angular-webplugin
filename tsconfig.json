@@ -1,37 +1,46 @@
+/* To learn more about this file see: https://angular.io/config/tsconfig. */
 {
-  "compileOnSave": true,
+  "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./",
-    "outDir": "./dist/out-tsc",
-    "sourceMap": true,
-    "declaration": false,
-    "downlevelIteration": true,
-    "experimentalDecorators": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "importHelpers": true,
-    "target": "es2015",
-    "lib": [
-      "es2018",
-      "dom"
-    ],
     "paths": {
-      "@tesla-ce/web-plugin": [
-        "dist/tesla-ce/web-plugin/tesla-ce-web-plugin",
-        "dist/tesla-ce/web-plugin"
-      ],
       "@tesla-ce/icons": [
         "dist/tesla-ce/icons/tesla-ce-icons",
         "dist/tesla-ce/icons"
       ],
       "@tesla-ce/sensors": [
         "dist/tesla-ce/sensors/tesla-ce-sensors",
+        "dist/tesla-ce/sensors",
+        "dist/tesla-ce/sensors/tesla-ce-sensors",
         "dist/tesla-ce/sensors"
+      ],
+      "@tesla-ce/web-plugin": [
+        "dist/tesla-ce/web-plugin/tesla-ce-web-plugin",
+        "dist/tesla-ce/web-plugin"
       ]
-    }
+    },
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "es2017",
+    "module": "es2020",
+    "lib": [
+      "es2018",
+      "dom"
+    ]
   },
   "angularCompilerOptions": {
-    "fullTemplateTypeCheck": true,
-    "strictInjectionParameters": true
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true
   }
 }

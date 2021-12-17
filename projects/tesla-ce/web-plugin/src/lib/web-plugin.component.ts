@@ -8,6 +8,7 @@ import {TranslateService} from '@ngx-translate/core';
 import * as moment from 'moment';
 import {WebPluginConnectionService} from './web-plugin-connection.service';
 import {APP_BASE_HREF} from '@angular/common';
+import {MatDialogRef} from "@angular/material/dialog/dialog-ref";
 
 
 /** @dynamic */
@@ -19,10 +20,10 @@ import {APP_BASE_HREF} from '@angular/common';
   ],
 })
 export class WebPluginComponent implements OnInit, AfterViewInit, OnDestroy {
-  public network: Observable<NetworkStatus>;
-  public sensors: Observable<SensorsStatus>;
-  @ViewChild('pluginMenuComponent') pluginMenu: ElementRef;
-  private consentDialogRef = null;
+  public network: Observable<NetworkStatus> = {} as Observable<NetworkStatus>;
+  public sensors: Observable<SensorsStatus> = {} as Observable<SensorsStatus>;
+  @ViewChild('pluginMenuComponent') pluginMenu: ElementRef = {} as ElementRef;
+  private consentDialogRef:MatDialogRef<WebPluginConsentComponent> = {} as MatDialogRef<WebPluginConsentComponent>;
 
   everySecond: Observable<number> = timer(0, 15000);
   subscription = null;
@@ -62,7 +63,7 @@ export class WebPluginComponent implements OnInit, AfterViewInit, OnDestroy {
       if (this.status.isReady()) {
         if (!this.status.getConsentStatus().accepted && !this.status.getConsentStatus().rejected) {
           this.showConsentDialog();
-        } else if (this.consentDialogRef !== null) {
+        } else if (Object.keys(this.consentDialogRef).length !== 0) {
           this.consentDialogRef.close();
         }
         if (this.status.getConsentStatus().accepted) {
@@ -86,7 +87,7 @@ export class WebPluginComponent implements OnInit, AfterViewInit, OnDestroy {
     this.consentDialogRef = this.dialog.open(WebPluginConsentComponent, dialogConfig);
     this.consentDialogRef.afterClosed().subscribe(
         data => {
-          this.consentDialogRef = null;
+          this.consentDialogRef = {} as MatDialogRef<WebPluginConsentComponent>;
           if (data === 'accepted') {
             this.status.acceptConsent();
           } else if (data === 'rejected') {
@@ -120,6 +121,8 @@ export class WebPluginComponent implements OnInit, AfterViewInit, OnDestroy {
             }
         } else {
             for (const mutation of mutationsList) {
+              /*
+              todo: review this code
                 if (mutation.attributeName === 'style' && mutation.target.nodeName === 'TeSLAConsentDialog' ){
                     if (this.consentDialogRef.style.display !== 'flex') {
                         this.consentDialogRef.style.display = 'flex';
@@ -133,6 +136,7 @@ export class WebPluginComponent implements OnInit, AfterViewInit, OnDestroy {
                         this.status.addNotification('alert', 'ALERT.DOM_CHANGE.CHANGED_STYLE');
                     }
                 }
+               */
             }
         }
       });

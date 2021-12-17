@@ -4,34 +4,18 @@
   "lib": {
     "entryFile": "src/public-api.ts",
     "umdModuleIds": {
-      "@tesla-ce/sensors": "sensors",
-      "@tesla-ce/icons": "icons",
-      "@ngx-pwa/local-storage": "storage",
-      "@ngx-translate/core": "core$1",
-      "angular-svg-icon": "angularSvgIcon",
-      "ngx-moment": "ngxMoment",
+      "@tesla-ce/sensors": "tesla-ce-sensors",
+      "@ngx-translate/core": "ngx-translate-core",
+      "@tesla-ce/icons": "tesla-ce-icons",
       "moment": "moment",
-      "@ngx-translate/http-loader": "httpLoader"
+      "angular-svg-icon": "angularSvgIcon",
+      "ngx-moment": "ngx-moment",
+      "@ngx-translate/http-loader": "ngx-translate-http-loader",
+      "@ngx-pwa/local-storage": "ngx-pwa-local-storage"
     }
   },
-  "whitelistedNonPeerDependencies": [
-    "@angular/compiler-cli",
-    "@angular/compiler",
-    "@angular/common",
-    "@angular/core",
-    "@angular/material",
-    "@angular/platform-browser",
-    "@angular/platform-browser-dynamic",
-    "@ngx-pwa/local-storage",
-    "@ngx-translate/core",
-    "@ngx-translate/http-loader",
-    "angular-svg-icon",
-    "document-register-element",
-    "moment",
-    "ngx-moment",
-    "rxjs",
+  "allowedNonPeerDependencies": [
     "@tesla-ce/icons",
-    "@tesla-ce/sensors",
-    "typescript"
+    "@tesla-ce/sensors"
   ]
 }

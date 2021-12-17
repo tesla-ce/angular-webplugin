@@ -16,31 +16,77 @@ export interface TeSLAJWTToken {
   access_token: string;
   refresh_token: string;
 }
-
+export enum Mode{
+  enrolment = 'enrolment',
+  verification = 'verification'
+}
+export interface TeSLAConfigurationOptions{
+  floating_menu_initial_pos: string
+}
+export interface TeSLALearner {
+  id: number;
+  learner_id: string;
+  first_name: string;
+  last_name: string;
+  picture: string;
+  institution_id: number;
+  locale: string;
+}
+export interface TeSLACourse {
+  id: number;
+  code: string;
+  description: string;
+  start?: Date
+  end?: Date
+}
+export interface TeSLAActivity {
+  enabled: boolean;
+  course: TeSLACourse;
+  id: number;
+  name: string;
+  description: string;
+  start?: Date
+  end?: Date
+  allow_reject_capture: boolean;
+  redirect_reject_url?: string;
+  rejected_message?: string;
+  vle_id: number;
+}
+export interface TeSLAAccessibility {
+  high_contrast: boolean;
+  big_fonts: boolean;
+  text_to_speech: boolean;
+}
 export interface TeSLAConfiguration {
   api_url: string;
   dashboard_url: string;
   logo_url: string;
-  mode: 'enrolment' | 'verification';
-  learner: object;
+  mode: Mode;
+  learner: TeSLALearner;
   session_id: number;
-  activity: object;
-  accessibility: object;
-  instruments: object;
+  activity: TeSLAActivity;
+  accessibility: TeSLAAccessibility;
+  instruments: Array<number>;
+  sensors: SensorIndex;
   token: TeSLAJWTToken;
   enrolment: object;
   launcher: object;
   base_url: string;
   locale: string;
+  options: TeSLAConfigurationOptions;
 }
 
 export interface StoredData {
-  sensors: SensorsStatus;
-  network: NetworkStatus;
-  consent: ConsentStatus;
+  [index: string]: any;
+  sensors?: SensorsStatus;
+  network?: NetworkStatus;
+  consent?: ConsentStatus;
   notifications: Array<Notification>;
 }
 
+export interface SensorIndex{
+  [index: string]: any;
+}
 export abstract class IconLoader {
 
   protected constructor(protected baseAssetsURL: string) {
@@ -88,39 +134,39 @@ export abstract class IconLoader {
   providedIn: 'root'
 })
 export class WebPluginService {
-  private keyPrefix: string;
-  private config = new BehaviorSubject<TeSLAConfiguration>(null);
-  private currentConfig = {
-    api_url: null,
-    dashboard_url: null,
-    logo_url: null,
-    mode: null,
-    learner: null,
-    session_id: null,
-    activity: null,
-    accessibility: null,
+  private keyPrefix: string = '';
+  private config = new BehaviorSubject<TeSLAConfiguration>({} as TeSLAConfiguration);
+  private currentConfig: TeSLAConfiguration = {
+    api_url: '',
+    dashboard_url: '',
+    logo_url: '',
+    mode: Mode.verification,
+    learner: {} as TeSLALearner,
+    session_id: 0,
+    activity: {} as TeSLAActivity,
+    accessibility: {} as TeSLAAccessibility,
     instruments: [],
-    sensors: {},
-    token: null,
-    enrolment: null,
-    launcher: null,
+    sensors: {} as SensorIndex,
+    token: {} as TeSLAJWTToken,
+    enrolment: {},
+    launcher: {},
     base_url: '.',
-    locale: null,
+    locale: '',
     options: {
       floating_menu_initial_pos: 'top-right'
-    }
-  };
+    } as TeSLAConfigurationOptions
+  } as TeSLAConfiguration;
   private storedData: StoredData;
   readonly configChange = this.config.asObservable();
   private ready = false;
   private capturing = false;
 
-  constructor(@Inject(DOCUMENT) private document, private http: HttpClient, private storage: StorageMap,
-              private sensors: SensorsService) {
+  constructor(@Inject(DOCUMENT) private document: Document, private http: HttpClient, private storage: StorageMap,
+              public sensors: SensorsService) {
     this.storedData = {
-      sensors: null,
-      network: null,
-      consent: null,
+      sensors: undefined,
+      network: undefined,
+      consent: undefined,
       notifications: []
     };
 
@@ -128,19 +174,27 @@ export class WebPluginService {
 
   public load(): Observable<any> {
     const rootElement = this.document.getElementsByTagName('tesla-web-plugin');
-    if (rootElement.length === 0) {
+    if (rootElement.length === 0 || rootElement === null) {
       console.error('Missing root tesla-web-plugin element');
-      return null;
+      return of([]);
     } else if (rootElement.length > 1) {
       console.error('Multiple root tesla-web-plugin elements found');
+      return of([]);
     }
-    if (!rootElement.item(0).attributes.hasOwnProperty('data-url')) {
+    // @ts-ignore: Object is possibly 'null'.
+    if (rootElement && rootElement.item(0)  && !rootElement.item(0).attributes.hasOwnProperty('data-url')) {
       console.error('Missing data-url argument on root element');
     } else {
+      // @ts-ignore: Object is possibly 'null'.
       const dataUrl = rootElement.item(0).attributes.getNamedItem('data-url').value;
       return this.http.get(dataUrl).pipe(
-        flatMap(configData => {
+        flatMap( configData => {
           Object.assign(this.currentConfig, configData);
+          if (this.currentConfig.learner === null) {
+            console.error('Error in configuration, learner is missing');
+            return of([]);
+          }
+          // @ts-ignore: Object is possibly 'null'.
           this.keyPrefix = 'tesla_' + this.currentConfig.learner.learner_id + '_' + this.currentConfig.session_id + '_';
           return this.storage.keys().pipe(
             filter((key) => key.startsWith(this.keyPrefix + 'data_')),
@@ -158,6 +212,7 @@ export class WebPluginService {
           }));
         }));
     }
+    return of([]);
   }
 
   public loadManualConfig(config: TeSLAConfiguration) {
@@ -184,13 +239,15 @@ export class WebPluginService {
 
   public getDashboardUrl() {
     if (this.currentConfig.launcher) {
+      // @ts-ignore: Object is possibly 'null'.
       return this.currentConfig.dashboard_url + '/ui/auth/launcher?id=' + this.currentConfig.launcher.id + '&token=' +
+        // @ts-ignore: Object is possibly 'null'.
         this.currentConfig.launcher.token;
     }
     return this.currentConfig.dashboard_url;
   }
 
-  public getInstruments() {
+  public getInstruments(): Array<number> {
     return this.currentConfig.instruments;
   }
 
@@ -198,7 +255,7 @@ export class WebPluginService {
     return this.currentConfig.sensors;
   }
 
-  public getSensorInstruments(sensor) {
+  public getSensorInstruments(sensor: any) {
     if (!this.currentConfig.sensors.hasOwnProperty(sensor)) {
       return null;
     }
@@ -209,35 +266,35 @@ export class WebPluginService {
     return this.currentConfig.session_id;
   }
 
-  public getLearner() {
+  public getLearner(): TeSLALearner {
     return this.currentConfig.learner;
   }
 
-  public getActivity() {
+  public getActivity(): TeSLAActivity {
     return this.currentConfig.activity;
   }
 
-  public getAssetsBaserUrl() {
+  public getAssetsBaserUrl(): string {
     return this.currentConfig.base_url + 'assets/';
   }
 
-  public getBaserUrl() {
+  public getBaserUrl(): string {
     return this.currentConfig.base_url;
   }
 
-  public getLocale() {
+  public getLocale(): string {
     return this.currentConfig.locale;
   }
 
-  public getMode() {
+  public getMode(): Mode {
     return this.currentConfig.mode;
   }
 
-  public getFloatingMenuPosition() {
+  public getFloatingMenuPosition(): string {
     return this.currentConfig.options.floating_menu_initial_pos;
   }
 
-  public getStoredData(key) {
+  public getStoredData(key: string) {
     return this.storedData['data_' + key];
   }
 

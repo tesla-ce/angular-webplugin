@@ -12,14 +12,14 @@ export interface SensorsStatus {
 
 export interface NetworkStatus {
   status: number;
-  speed: number;
+  speed?: number;
 }
 
 export interface ConsentStatus {
   accepted: boolean;
-  accepted_at: Date;
+  accepted_at?: Date;
   rejected: boolean;
-  rejected_at: Date;
+  rejected_at?: Date;
 }
 
 export interface Notification {
@@ -32,10 +32,10 @@ export interface Notification {
   providedIn: 'root'
 })
 export class WebPluginStatusService {
-  private sensors = new BehaviorSubject<SensorsStatus>(null);
-  private network = new BehaviorSubject<NetworkStatus>(null);
-  private consent = new BehaviorSubject<ConsentStatus>(null);
-  private notifications = new BehaviorSubject<Array<Notification>>(null);
+  private sensors = new BehaviorSubject<SensorsStatus>({} as SensorsStatus);
+  private network = new BehaviorSubject<NetworkStatus>({} as NetworkStatus);
+  private consent = new BehaviorSubject<ConsentStatus>({} as ConsentStatus);
+  private notifications = new BehaviorSubject<Array<Notification>>({} as Array<Notification>);
   private dataStore: {sensors: SensorsStatus, network: NetworkStatus, consent: ConsentStatus, notifications: Array<Notification>} = {
     sensors: {
       camera: 0,
@@ -44,12 +44,12 @@ export class WebPluginStatusService {
       assessment: 0
     }, network: {
       status: 0,
-      speed: null
+      speed: undefined
     }, consent: {
       accepted: false,
-      accepted_at: null,
+      accepted_at: undefined,
       rejected: false,
-      rejected_at: null
+      rejected_at: undefined
     }, notifications: []
   };
   readonly sensorsStatus = this.sensors.asObservable();
@@ -159,32 +159,32 @@ export class WebPluginStatusService {
     return this.dataStore.notifications;
   }
 
-  public setCameraStatus(status) {
+  public setCameraStatus(status: number) {
     this.dataStore.sensors.camera = status;
     this.sensors.next(Object.assign({}, this.dataStore).sensors);
   }
 
-  public setMicStatus(status) {
+  public setMicStatus(status: number) {
     this.dataStore.sensors.microphone = status;
     this.sensors.next(Object.assign({}, this.dataStore).sensors);
   }
 
-  public setKeyboardStatus(status) {
+  public setKeyboardStatus(status: number) {
     this.dataStore.sensors.keyboard = status;
     this.sensors.next(Object.assign({}, this.dataStore).sensors);
   }
 
-  public setAssessmentStatus(status) {
+  public setAssessmentStatus(status: number) {
     this.dataStore.sensors.assessment = status;
     this.sensors.next(Object.assign({}, this.dataStore).sensors);
   }
 
-  public setNetworkStatus(status) {
+  public setNetworkStatus(status: number) {
     this.dataStore.network.status = status;
     this.network.next(Object.assign({}, this.dataStore).network);
   }
 
-  public setNetworkSpeed(speed) {
+  public setNetworkSpeed(speed: number) {
     this.dataStore.network.speed = speed;
     this.network.next(Object.assign({}, this.dataStore).network);
   }
@@ -193,14 +193,14 @@ export class WebPluginStatusService {
     this.dataStore.consent.accepted = true;
     this.dataStore.consent.rejected = false;
     this.dataStore.consent.accepted_at = new Date();
-    this.dataStore.consent.rejected_at = null;
+    this.dataStore.consent.rejected_at = undefined;
     this.consent.next(Object.assign({}, this.dataStore).consent);
   }
 
   public rejectConsent() {
     this.dataStore.consent.accepted = false;
     this.dataStore.consent.rejected = true;
-    this.dataStore.consent.accepted_at = null;
+    this.dataStore.consent.accepted_at = undefined;
     this.dataStore.consent.rejected_at = new Date();
     this.consent.next(Object.assign({}, this.dataStore).consent);
   }

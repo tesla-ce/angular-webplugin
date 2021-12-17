@@ -43,7 +43,7 @@ export interface VerificationData {
 
 export interface DataSample {
   type: 'enrolment' | 'verification';
-  seq?: number;
+  seq: number;
   institutionId: number;
   learnerId: string;
   body: EnrolmentData | VerificationData;
@@ -65,7 +65,7 @@ export interface AlertMessage {
   institutionId: number;
   learnerId: string;
   body: AlertData;
-  seq?: number;
+  seq: number;
 }
 
 export interface LAPISampleResponse {
@@ -89,9 +89,9 @@ export interface Buffer {
 export class WebPluginConnectionService {
 
   private apiUrl: string;
-  private token: TeSLAJWTToken;
-  private requests = new BehaviorSubject<DataSample>(null);
-  private alerts = new BehaviorSubject<AlertMessage>(null);
+  private token: TeSLAJWTToken = {} as TeSLAJWTToken;
+  private requests = new BehaviorSubject<DataSample>({} as DataSample);
+  private alerts = new BehaviorSubject<AlertMessage>({} as AlertMessage);
   readonly newAlert = this.alerts.asObservable();
   readonly newRequest = this.requests.asObservable();
   private sendingAlerts = false;
@@ -113,14 +113,14 @@ export class WebPluginConnectionService {
     failed: 0,
     status: []
   };
-  private dataCapture: Subscription;
+  private dataCapture: Subscription = {} as Subscription;
 
-  constructor(@Inject(WebPluginService) private config,
-              @Inject(WebPluginTokenService) private tokenService,
-              @Inject(WebPluginStatusService) private statusService,
+  constructor(@Inject(WebPluginService) private config: WebPluginService,
+              @Inject(WebPluginTokenService) private tokenService: WebPluginTokenService,
+              @Inject(WebPluginStatusService) private statusService: WebPluginStatusService,
               private http: HttpClient) {
     this.apiUrl = config.getApiURL();
-    tokenService.tokenChange.subscribe(token => {
+    tokenService.tokenChange.subscribe((token: TeSLAJWTToken) => {
       this.token = token;
     });
     if (config.getStoredData('requests')) {
@@ -129,7 +129,7 @@ export class WebPluginConnectionService {
     if (config.getStoredData('alerts')) {
       Object.assign(this.alertBuffer, config.getStoredData('alerts'));
     }
-    this.newAlert.subscribe(alert => {
+    this.newAlert.subscribe((alert: AlertMessage) => {
       if (alert) {
         if (alert.seq && alert.seq > 0) {
           if (this.alertBuffer.pending.includes(alert.seq)) {
@@ -137,8 +137,6 @@ export class WebPluginConnectionService {
             this.config.setStoredData('alerts', Object.assign({}, this.alertBuffer));
           }
         } else {
-          this.alertBuffer.seq++;
-          alert.seq = this.alertBuffer.seq;
           this.config.setStoredAlert(alert.seq, Object.assign({}, alert)).subscribe(() => {
             this.alertBuffer.pending.push(alert.seq);
             this.config.setStoredData('alerts', Object.assign({}, this.alertBuffer));
@@ -154,8 +152,6 @@ export class WebPluginConnectionService {
             this.config.setStoredData('requests', Object.assign({}, this.requestBuffer));
           }
         } else {
-          this.requestBuffer.seq++;
-          request.seq = this.requestBuffer.seq;
           this.config.setStoredRequest(request.seq, Object.assign({}, request)).subscribe(() => {
             this.requestBuffer.pending.push(request.seq);
             this.config.setStoredData('requests', Object.assign({}, this.requestBuffer));
@@ -179,7 +175,7 @@ export class WebPluginConnectionService {
         if (this.config.isCapturing()) {
           if (data && data.sensor) {
             this.sendRequest(this.config.getMode(), data.b64data, data.mimeType,
-              this.config.getSensorInstruments(data.sensor), null, data.context);
+              this.config.getSensorInstruments(data.sensor), '', data.context);
           }
         }
       });
@@ -263,11 +259,14 @@ export class WebPluginConnectionService {
         metadata,
       };
     }
+    this.requestBuffer.seq++;
+
     const dataSample: DataSample = {
       type,
       institutionId: this.config.getLearner().institution_id,
       learnerId: this.config.getLearner().learner_id,
       body,
+      seq: this.requestBuffer.seq
     };
 
     this.addRequest(dataSample);
@@ -288,11 +287,13 @@ export class WebPluginConnectionService {
       instruments,
       raised_at: new Date().toISOString()
     };
+    this.alertBuffer.seq++;
 
     const alertMessage: AlertMessage = {
       institutionId: this.config.getLearner().institution_id,
       learnerId: this.config.getLearner().learner_id,
-      body: alertData
+      body: alertData,
+      seq: this.alertBuffer.seq
     };
 
     this.addAlert(alertMessage);
@@ -317,7 +318,7 @@ export class WebPluginConnectionService {
         concatMap(seq => this.config.getStoredRequest(seq)),
         concatMap(request => forkJoin([of<any>([request, ]), this.sendData(request).pipe(catchError( error => of(null)))]))
       )
-      .subscribe(result => {
+      .subscribe((result: Array<any>) => {
         const seq = result[0][0].seq;
         if (result[1]) {
           console.log('Request seq=' + seq + ' sent');
@@ -351,7 +352,7 @@ export class WebPluginConnectionService {
         concatMap(seq => this.config.getStoredAlert(seq)),
         concatMap(alert => forkJoin([of<any>([alert, ]), this.sendAlert(alert).pipe(catchError( error => of(null)))]))
       )
-      .subscribe(result => {
+      .subscribe((result: Array<any>) => {
         const seq = result[0][0].seq;
         if (result[1]) {
           console.log('Alert seq=' + seq + ' sent');
