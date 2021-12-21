@@ -1,6 +1,6 @@
 {
   "name": "@tesla-ce/web-plugin",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "peerDependencies": {
     "@angular/common": "^12.1.0",
     "@angular/core": "^12.1.0",
