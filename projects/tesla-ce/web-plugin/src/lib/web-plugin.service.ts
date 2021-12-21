@@ -189,7 +189,8 @@ export class WebPluginService {
       const dataUrl = rootElement.item(0).attributes.getNamedItem('data-url').value;
       return this.http.get(dataUrl).pipe(
         flatMap( configData => {
-          Object.assign(this.currentConfig, configData);
+          Object.assign(this.currentConfig, configData as TeSLAConfiguration);
+
           if (this.currentConfig.learner === null) {
             console.error('Error in configuration, learner is missing');
             return of([]);

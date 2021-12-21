@@ -1,12 +1,12 @@
 {
   "name": "@tesla-ce/web-plugin",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "peerDependencies": {
     "@angular/common": "^12.1.0",
     "@angular/core": "^12.1.0",
     "@angular/material": "^12.1.0",
-    "@ngx-translate/core": "^12.1.0",
-    "@ngx-translate/http-loader": "^4.0.0",
+    "@ngx-translate/core": "^13.0.0",
+    "@ngx-translate/http-loader": "^6.0.0",
     "@ngx-pwa/local-storage": "^12.1.0",
     "moment": "^2.29.1",
     "ngx-moment": "^5.0.0",
