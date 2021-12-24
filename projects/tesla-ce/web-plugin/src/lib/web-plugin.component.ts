@@ -24,9 +24,10 @@ export class WebPluginComponent implements OnInit, AfterViewInit, OnDestroy {
   public sensors: Observable<SensorsStatus> = {} as Observable<SensorsStatus>;
   @ViewChild('pluginMenuComponent') pluginMenu: ElementRef = {} as ElementRef;
   private consentDialogRef:MatDialogRef<WebPluginConsentComponent> = {} as MatDialogRef<WebPluginConsentComponent>;
-
+  private consentAccepted = false;
   everySecond: Observable<number> = timer(0, 15000);
   subscription = null;
+  observer: MutationObserver = {} as MutationObserver;
 
   constructor(@Inject(WebPluginService) private config: WebPluginService,
               @Inject(APP_BASE_HREF) private appBaseHref: string,
@@ -64,6 +65,7 @@ export class WebPluginComponent implements OnInit, AfterViewInit, OnDestroy {
         if (!this.status.getConsentStatus().accepted && !this.status.getConsentStatus().rejected) {
           this.showConsentDialog();
         } else if (Object.keys(this.consentDialogRef).length !== 0) {
+          this.consentAccepted = true;
           this.consentDialogRef.close();
         }
         if (this.status.getConsentStatus().accepted) {
@@ -87,8 +89,10 @@ export class WebPluginComponent implements OnInit, AfterViewInit, OnDestroy {
     this.consentDialogRef = this.dialog.open(WebPluginConsentComponent, dialogConfig);
     this.consentDialogRef.afterClosed().subscribe(
         data => {
+          this.observer.disconnect();
           this.consentDialogRef = {} as MatDialogRef<WebPluginConsentComponent>;
           if (data === 'accepted') {
+            this.consentAccepted = true;
             this.status.acceptConsent();
           } else if (data === 'rejected') {
             this.status.rejectConsent();
@@ -100,7 +104,7 @@ export class WebPluginComponent implements OnInit, AfterViewInit, OnDestroy {
     this.consentDialogRef.afterOpened().subscribe( () => {
       const div = document.getElementsByTagName('body')[0];
       const config = { attributes: true, childList: true, subtree: true };
-      const observer = new MutationObserver((mutationsList) => {
+      this.observer = new MutationObserver((mutationsList: Array<MutationRecord>) => {
         if (document.getElementById('TeSLAConsentDialog') == null) {
             for (const mutation of mutationsList) {
                 if (mutation.removedNodes.length > 0) {
@@ -121,11 +125,12 @@ export class WebPluginComponent implements OnInit, AfterViewInit, OnDestroy {
             }
         } else {
             for (const mutation of mutationsList) {
-              /*
-              todo: review this code
-                if (mutation.attributeName === 'style' && mutation.target.nodeName === 'TeSLAConsentDialog' ){
-                    if (this.consentDialogRef.style.display !== 'flex') {
-                        this.consentDialogRef.style.display = 'flex';
+                if (mutation.attributeName === 'style'&& mutation.target.nodeName === 'MAT-DIALOG-CONTAINER' ){
+                  const t: any =  document.getElementById('TeSLAConsentDialog')!;
+                    if (t.getAttribute('style') !== 'transform: none;' && t.getAttribute('style') !== '' &&
+                      this.consentAccepted === false) {
+                        t.setAttribute('style', 'transform: none;');
+
                         this.connection.sendAlertMessage(
                           'alert',
                           'ALERT.DOM_CHANGE.CHANGED_STYLE',
@@ -136,11 +141,10 @@ export class WebPluginComponent implements OnInit, AfterViewInit, OnDestroy {
                         this.status.addNotification('alert', 'ALERT.DOM_CHANGE.CHANGED_STYLE');
                     }
                 }
-               */
             }
         }
       });
-      observer.observe(div, config);
+      this.observer.observe(div, config);
     });
   }
 }

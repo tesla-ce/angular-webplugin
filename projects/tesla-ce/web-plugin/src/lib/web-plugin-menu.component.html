@@ -10,7 +10,7 @@
   <a href="{{dashboardUrl}}" target="_blank">
     <lib-tesla-icons icon="common-dashboard"></lib-tesla-icons>
   </a>
-  <a *ngIf="notifications | async as notificationss" href="javascript:void(0);" [matBadgeHidden]="notificationss.length==0" [matBadge]="notificationss.length" matBadgeColor="warn" matBadgeSize="small" class="smaller" (click)="showAlerts()">
+  <a *ngIf="notifications | async as notificationss" href="javascript:void(0);" [matBadgeHidden]="notificationss.length===0" [matBadge]="notificationss.length" matBadgeColor="warn" matBadgeSize="small" class="smaller" (click)="showAlerts()">
     <lib-tesla-icons icon="common-notifications"></lib-tesla-icons>
   </a>
 

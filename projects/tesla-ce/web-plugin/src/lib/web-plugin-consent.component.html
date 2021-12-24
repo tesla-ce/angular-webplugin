@@ -1,10 +1,9 @@
 <h1 mat-dialog-title>{{ 'ETHICAL_WARNING.HEADER' | translate }}</h1>
 <div mat-dialog-content class="mat-typography">
   <p style="text-align: justify;">{{ 'ETHICAL_WARNING.MESSAGE' | translate }}</p>
-  <mat-grid-list [cols]="breakpoint" (window:resize)="onResize($event)">
+  <mat-grid-list [cols]="breakpoint" (window:resize)="onResize($event)" rowHeight="14rem">
     <mat-grid-tile [colspan]="1" [rowspan]="1" *ngFor="let instrument of enabledInstruments">
-      <mat-card class="text-center" style="height: 140px; width: 140px; text-align: center;">
-
+      <mat-card class="text-center" style="text-align: center; min-height: 160px; min-width: 140px;">
         <lib-tesla-icons mat-card-image icon="instrument-{{instrument}}" width="100" height="100" marginLeft="0" marginRight="0" marginTop="10"></lib-tesla-icons>
         <mat-card-content>
           <p *ngIf="instrument === 1" class="text-center">

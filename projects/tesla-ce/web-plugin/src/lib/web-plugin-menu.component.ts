@@ -57,8 +57,10 @@ export class WebPluginMenuComponent extends IconLoader implements OnInit, AfterV
     this.consent = this.status.consentStatus;
     this.dashboardUrl = this.config.getDashboardUrl();
 
-    this.notifications.subscribe(() => {
-      this.logoNotification = true;
+    this.notifications.subscribe((notifications:any) => {
+      if (notifications.length > 0) {
+        this.logoNotification = true;
+      }
     });
   }
 

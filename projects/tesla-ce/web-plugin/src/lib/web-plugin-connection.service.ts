@@ -15,10 +15,11 @@ import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angul
 import { WebPluginService, TeSLAJWTToken } from './web-plugin.service';
 import { WebPluginTokenService } from './web-plugin-token.service';
 import { WebPluginStatusService } from './web-plugin-status.service';
+import { SensorEvent} from '@tesla-ce/sensors';
 
 
 export interface DataMetadata {
-  filename?: string;
+  filename: string;
   mimetype: string;
   context?: object;
   created_at: Date;
@@ -56,7 +57,7 @@ export interface AlertData {
   activity_id: number;
   message_code: string;
   session_id?: number;
-  data: string;
+  data: Object;
   instruments?: Array<number>;
   raised_at: string;
 }
@@ -114,6 +115,7 @@ export class WebPluginConnectionService {
     status: []
   };
   private dataCapture: Subscription = {} as Subscription;
+  private eventCapture: Subscription = {} as Subscription;
 
   constructor(@Inject(WebPluginService) private config: WebPluginService,
               @Inject(WebPluginTokenService) private tokenService: WebPluginTokenService,
@@ -130,33 +132,19 @@ export class WebPluginConnectionService {
       Object.assign(this.alertBuffer, config.getStoredData('alerts'));
     }
     this.newAlert.subscribe((alert: AlertMessage) => {
-      if (alert) {
-        if (alert.seq && alert.seq > 0) {
-          if (this.alertBuffer.pending.includes(alert.seq)) {
-            this.alertBuffer.pending.push(alert.seq);
-            this.config.setStoredData('alerts', Object.assign({}, this.alertBuffer));
-          }
-        } else {
-          this.config.setStoredAlert(alert.seq, Object.assign({}, alert)).subscribe(() => {
-            this.alertBuffer.pending.push(alert.seq);
-            this.config.setStoredData('alerts', Object.assign({}, this.alertBuffer));
-          });
-        }
+      if (Object.keys(alert).length != 0) {
+        this.config.setStoredAlert(alert.seq, Object.assign({}, alert)).subscribe(() => {
+          this.alertBuffer.pending.push(alert.seq);
+          this.config.setStoredData('alerts', Object.assign({}, this.alertBuffer));
+        });
       }
     });
     this.newRequest.subscribe(request => {
-      if (request) {
-        if (request.seq && request.seq > 0) {
-          if (this.requestBuffer.pending.includes(request.seq)) {
-            this.requestBuffer.pending.push(request.seq);
-            this.config.setStoredData('requests', Object.assign({}, this.requestBuffer));
-          }
-        } else {
-          this.config.setStoredRequest(request.seq, Object.assign({}, request)).subscribe(() => {
-            this.requestBuffer.pending.push(request.seq);
-            this.config.setStoredData('requests', Object.assign({}, this.requestBuffer));
-          });
-        }
+      if (Object.keys(request).length != 0) {
+        this.config.setStoredRequest(request.seq, Object.assign({}, request)).subscribe(() => {
+          this.requestBuffer.pending.push(request.seq);
+          this.config.setStoredData('requests', Object.assign({}, this.requestBuffer));
+        });
       }
     });
     this.sendingAlerts = false;
@@ -175,10 +163,16 @@ export class WebPluginConnectionService {
         if (this.config.isCapturing()) {
           if (data && data.sensor) {
             this.sendRequest(this.config.getMode(), data.b64data, data.mimeType,
-              this.config.getSensorInstruments(data.sensor), '', data.context);
+              this.config.getSensorInstruments(data.sensor), 'capture.webplugin', data.context);
           }
         }
       });
+
+    this.eventCapture = this.config.sensors.eventChange.subscribe((data: SensorEvent) => {
+      if (Object.keys(data).length > 0) {
+        this.sendAlertMessage(data.level, data.code, data, this.config.getInstruments());
+      }
+    });
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {
@@ -231,7 +225,7 @@ export class WebPluginConnectionService {
   }
 
   public sendRequest(type: 'enrolment' | 'verification', data: string, mimetype: string, instruments: Array<number>,
-                     filename?: string, context?: object): void {
+                     filename: string, context?: object): void {
 
     const metadata: DataMetadata = {
       mimetype,
@@ -274,7 +268,7 @@ export class WebPluginConnectionService {
 
   public sendAlertMessage(level: 'info'|'warning'|'alert'|'error',
                           messageCode: string,
-                          data: string, instruments: Array<number> = []): void {
+                          data: Object, instruments: Array<number> = []): void {
 
     const alertData: AlertData = {
       level,
@@ -311,12 +305,16 @@ export class WebPluginConnectionService {
     if (this.sendingRequests) {
       return;
     }
+
     this.sendingRequests = true;
     const start = Math.floor(Math.random() * Math.max(0, this.requestBuffer.pending.length - 10));
+
     scheduled(from(this.requestBuffer.pending.slice(start, 10)), queueScheduler)
       .pipe(
         concatMap(seq => this.config.getStoredRequest(seq)),
-        concatMap(request => forkJoin([of<any>([request, ]), this.sendData(request).pipe(catchError( error => of(null)))]))
+        concatMap(request => forkJoin([of<any>([request, ]), this.sendData(request).pipe(catchError( (error) => {
+          return of(null);
+        }))]))
       )
       .subscribe((result: Array<any>) => {
         const seq = result[0][0].seq;
@@ -390,9 +388,11 @@ export class WebPluginConnectionService {
       learner_id: this.config.getLearner().learner_id,
       samples: this.requestBuffer.status.concat(this.alertBuffer.status)
     };
+
     if (body.samples.length === 0) {
       return;
     }
+
     this.http.post<any>(statusURL, body, options).pipe(
       catchError(this.handleError)
     ).subscribe(resp => {

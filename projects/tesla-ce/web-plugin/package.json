@@ -1,6 +1,6 @@
 {
   "name": "@tesla-ce/web-plugin",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "peerDependencies": {
     "@angular/common": "^12.1.0",
     "@angular/core": "^12.1.0",
@@ -11,12 +11,12 @@
     "moment": "^2.29.1",
     "ngx-moment": "^5.0.0",
     "rxjs": "~6.6.0",
-    "@tesla-ce/icons": "0.0.40",
-    "@tesla-ce/sensors": "0.0.14"
+    "@tesla-ce/icons": "0.0.43",
+    "@tesla-ce/sensors": "0.0.17"
   },
   "dependencies": {
     "tslib": "^2.2.0",
-    "@tesla-ce/icons": "0.0.40",
-    "@tesla-ce/sensors": "0.0.15"
+    "@tesla-ce/icons": "0.0.43",
+    "@tesla-ce/sensors": "0.0.17"
   }
 }

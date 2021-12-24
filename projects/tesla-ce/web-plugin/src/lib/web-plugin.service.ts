@@ -346,6 +346,7 @@ export class WebPluginService {
           enabledSensors.push('assessment');
         }
       }
+
       this.sensors.enableSensors(enabledSensors);
       this.sensors.start();
 
